@@ -3,8 +3,11 @@ package main
 import (
 	"fmt"
 	"net"
-	"util"
 )
+
+func HandleErr(err error) {
+	_ = fmt.Errorf(err.Error())
+}
 
 func main() {
 	udp, err := net.DialUDP("udp", nil,
@@ -14,24 +17,24 @@ func main() {
 		},
 	)
 	if err != nil {
-		util.HandleErr(err)
+		HandleErr(err)
 	}
 	defer func(udp *net.UDPConn) {
 		err := udp.Close()
 		if err != nil {
-			util.HandleErr(err)
+			HandleErr(err)
 			return
 		}
 	}(udp)
 	write, err := udp.Write([]byte("测试我要写的道喜"))
 	if err != nil {
-		util.HandleErr(err)
+		HandleErr(err)
 	}
 	fmt.Println("写入", write, "个字节")
 	var bytes [1024]byte
 	n, addr, err := udp.ReadFromUDP(bytes[:])
 	if err != nil {
-		util.HandleErr(err)
+		HandleErr(err)
 	}
 	fmt.Printf("从%v读取%v字节:%v", n, addr, string(bytes[:n]))
 }

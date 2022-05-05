@@ -25,7 +25,11 @@ func readConnection(connection net.Conn) {
 		read, err := connection.Read(bytes)
 		if err != nil {
 			fmt.Println("server read error,", err)
-			connection.Close()
+			err := connection.Close()
+			if err != nil {
+				fmt.Println("关闭连接,一般不会出错吧,反正出错了我也不会处理的")
+				return
+			}
 			return
 		}
 		fmt.Printf("读取了 [%d] 个字节\t", read)
